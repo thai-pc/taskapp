@@ -15,12 +15,12 @@ use CodeIgniter\HotReloader\HotReloader;
  * location to define your events, though they can always be added
  * at run-time, also, if needed.
  *
- * You create code that can execute by subscribing to events with
+ * You create.php code that can execute by subscribing to events with
  * the 'on()' method. This accepts any form of callable, including
  * Closures, that will be executed when the event is triggered.
  *
  * Example:
- *      Events::on('create', [$myInstance, 'myMethod']);
+ *      Events::on('create.php', [$myInstance, 'myMethod']);
  */
 
 Events::on('pre_system', static function () {
