@@ -22,7 +22,7 @@ class TaskController extends BaseController
     }
     public function show($id)
     {
-        $task = $this->taskModel->find($id);
+        $task = $this->getTaskOr404($id);
         return view('tasks/show', ['task' => $task]);
     }
     public function create()
@@ -33,30 +33,23 @@ class TaskController extends BaseController
     public function store()
     {
         $description = $this->request->getPost('description');
-        $data = [
-            'description' => $description
-        ];
-        $store = $this->taskModel->insert($data);
-        if($store === false){
+        $task = new \App\Entities\Task();
+        $task->description = $description;
+
+        if (!$this->taskModel->save($task)) {
             return redirect()->back()->with('errors', $this->taskModel->errors());
-        }else{
-            return redirect()->to('tasks/show/'.$store)->with('success', 'Thêm task thành công');
         }
+        return redirect()->to('tasks/show/' . $this->taskModel->getInsertID())->with('success', 'Thêm task thành công');
     }
     public function edit($id)
     {
-        $task = $this->taskModel->find($id);
-        if(!$task){
-           throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        }
+        $task = $this->getTaskOr404($id);
         return view('tasks/edit', ['task' => $task]);
     }
     public function update($id)
     {
-        $task = $this->taskModel->find($id);
-        if (!$task) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-        }
+        $task = $this->getTaskOr404($id);
+
         $description = $this->request->getPost('description');
         $task->description = $description;
         if(!$task->hasChanged()){
@@ -68,5 +61,19 @@ class TaskController extends BaseController
         }else{
             return redirect()->to('tasks/show/'.$id)->with('success', 'Cập nhật tasks thành công');
         }
+    }
+    public function delete($id)
+    {
+        $task = $this->getTaskOr404($id);
+        if($this->taskModel->delete($id)){
+           return redirect()->to('tasks')->with('success', 'Xóa task thành công');
+        }
+    }
+    private function getTaskOr404($id){
+        $task = $this->taskModel->find($id);
+        if(!$task){
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Không tìm thấy id là $id");
+        }
+        return $task;
     }
 }

@@ -20,7 +20,7 @@
     <button type="submit">
         Cập nhật
     </button>
-    <a href="<?= site_url('tasks/show'.$task->id)?>">
+    <a href="<?= site_url('tasks/show/'.$task->id)?>">
         Trở về
     </a>
     </form>

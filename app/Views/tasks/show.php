@@ -26,6 +26,13 @@
             <a href="<?= site_url('tasks/edit/' . $task->id) ?>">
                 Cập nhật
             </a>
+            <?= form_open('tasks/delete/'.$task->id)?>
+            <?= csrf_field()?>
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit">
+                Xóa
+            </button>
+            </form>
         </li>
     </ul>
 <?= $this->endSection('content') ?>
